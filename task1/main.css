@@ -1,0 +1,214 @@
+@media (max-width: 900px) { /* при разрешении монитора до 900 пикселей */
+	.information_board .airline{
+		 display: none;
+	}
+}
+@media (max-width: 800px) { /* при разрешении монитора до 800 пикселей */
+	.information_board .full_name{
+		 display: none;
+	}
+	.information_board .comments{
+		 display: none;
+	}
+}
+@media (max-width: 700px) { /* при разрешении монитора до 700 пикселей */
+	.information_board .aircraft{
+		 display: none;
+	}
+}
+@media (max-width: 600px) { /* при разрешении монитора до 600 пикселей */
+	.information_board .logo{
+		 display: none;
+	}
+}
+@media (max-width: 500px) { /* при разрешении монитора до 500 пикселей */
+	.information_board .time{
+		 display: none;
+	}
+	.information_board .full_name_number{
+		 display: none;
+	}
+}
+body {
+	margin: 0;
+	padding: 0;
+	font-family:Oswald, Helvetica, Arial, sans-serif;
+	text-transform:uppercase;
+	font-size:12px;
+}
+
+/* Стили для закладок */
+.tabs {
+	position: relative;
+	height: 800px; 
+}
+.tab {
+	float: left;
+	margin-top: 40px;
+}
+.tab label {
+	position: fixed;
+	margin-top: 20px;
+	padding: 5px;
+	z-index: 4;
+	font-weight: bold;
+	background: #EAEDED;
+	border: 1px solid #ccc;
+}
+.label_tab-2{
+	margin-left: 60px;
+}
+.content {
+	position: absolute;
+	top: 90px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: white;
+	border-top: 1px solid #ccc;
+}
+.tab [type=radio] {
+	display: none;
+}
+.tab [type=radio]:checked ~ label {
+	z-index: 3;
+	background-color: white;
+	box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+}
+.tab [type=radio]:checked ~ label ~ .content {
+	z-index: 2;
+}
+
+/* Стили для информационного табло */
+.information_board {
+	width: 100%;
+	border-collapse: collapse;
+	overflow: hidden;
+}
+.information_board td{
+	padding: 0;
+	margin: 0;
+}
+.header_board  td div{
+	padding: 5px;
+	height: 25px;
+}
+.header_board{
+	position: fixed;
+	font-weight: bold;
+	width: 100%; 
+	background-color: #8E9DBA;
+	box-shadow: 0 0 10px rgba(0,0,0,0.5);
+	z-index: 3;
+}
+.inf td{
+	padding-top: 5px;
+	text-align: center;
+	font-size: 14px;
+}
+.inf td div{
+	font-size: 10px;
+	font-weight: normal;
+	text-transform:capitalize;
+}
+.boby_board td div{
+	position: relative;
+	z-index: 1; 
+	padding: 5px;
+	height: 40px;
+	text-transform:capitalize;
+	cursor: pointer;
+}
+.boby_board img {
+	width: 100%;
+	max-height: 40px;
+	min-height: 20px;
+}
+.boby_board tr:nth-child(2n+1) {
+	background-color: #EAEDED;
+}
+.boby_board tr:hover td div{
+	z-index: 0;
+	background-color: #BDCAE3;
+}
+.boby_board td:hover div:before,
+.boby_board td:hover div:after{
+	content: '';
+	position: absolute;
+	z-index: -1;
+	width: 100%;
+	height: 4000px;
+	top: -2000px;
+	left: 0;
+	background-color: #BDCAE3;
+}
+.type{
+	width: 12%;
+}
+.number{
+	width: 6%;
+}
+.airline{
+	width: 10%;
+}
+.logo{
+	width: 8%;
+}
+.aircraft{
+	width: 12%;
+}
+.airport{
+	width: 12%;
+}
+.time{
+	width: 10%;
+}
+.status{
+	width: 12%;
+}
+.comments{
+	width: 12%;
+}
+
+/* Стили для окна с полной информацией о рейсе */
+.upper_layer {
+	display: none;
+	position: fixed;
+	z-index: 4;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.20);
+}
+.inf_upper_layer {
+	display: none;
+	position: fixed;
+	top: 20%;
+	padding: 10px;
+	padding-top: 0px;
+	margin-left: 20%;
+	width: 60%;
+	line-height: 2;
+	background:  #FEFEFE; 
+	box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+.inf_upper_layer h2{
+	text-align: center;
+}
+.button_close {
+	position: absolute;
+	top: -10px;
+	right: -10px;
+	width: 25px;
+	height: 25px;
+	background-image: url("img/close.png");
+	background-size: cover;
+}
+.upper_layer:target {
+	display: block;
+}
+.upper_layer:target+.inf_upper_layer {
+	display: block;
+	z-index: 5;
+}

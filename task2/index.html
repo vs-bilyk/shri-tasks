@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+	<title>Задание №2</title>
+
+</head>
+
+<body>
+
+<script type="text/javascript">
+
+function getData(url, callback) {
+	var RESPONSES = {
+		'/countries': [
+			{name: 'Cameroon', continent: 'Africa'},
+			{name: 'Fiji Islands', continent: 'Oceania'},
+			{name: 'Guatemala', continent: 'North America'},
+			{name: 'Japan', continent: 'Asia'},
+			{name: 'Yugoslavia', continent: 'Europe'},
+			{name: 'Tanzania', continent: 'Africa'},
+		],
+		'/cities': [
+			{name: 'Bamenda', country: 'Cameroon'},
+			{name: 'Suva', country: 'Fiji Islands'},
+			{name: 'Quetzaltenango', country: 'Guatemala'},
+			{name: 'Osaka', country: 'Japan'},
+			{name: 'Subotica', country: 'Yugoslavia'},
+			{name: 'Zanzibar', country: 'Tanzania'},
+		],
+		'/populations': [
+			{count: 138000, name: 'Bamenda'},
+			{count: 77366, name: 'Suva'},
+			{count: 90801, name: 'Quetzaltenango'},
+			{count: 2595674, name: 'Osaka'},
+			{count: 100386, name: 'Subotica'},
+			{count: 157634, name: 'Zanzibar'},
+		]
+	};
+
+	setTimeout(function(){
+		var result = RESPONSES[url];
+		if (!result) {
+			return callback('Unknown url');
+		}
+		callback(null, result);
+	}, Math.round(Math.random() * 1000));
+}
+	/* ошибка возникала в результате вызова функции callback раньше,
+	чем приходят данные (из-за асинхронной функции setTimeout),
+	для решения этой проблемы необходимо либо убрать setTimeout,
+	либо дождаться загрузки всех данных и после этого вызывать функцию */
+
+var list = [], // список всех континентов, стран и городов с населением
+	requests = ['/countries', '/cities', '/populations'];
+
+requests.forEach(function(item, index) { // запись информации из getData в list
+	function callback(error, data){
+		list[index] = data;
+	}
+
+	getData(item, callback);
+});
+
+function getPopulation(place, data){ // функция для получения населения
+	if (!data[0] || !data[1] || !data[2]) { // проверка наличия данных
+		console.log('Недостаточно данных');
+		return false;
+	}
+
+	if (!place) { // если не указано место
+		console.log('Отмена');
+		return false;
+	}
+
+	// начало определения типа запрашиваемого места
+	function testPlace(data, property, place) { // функция для определения типа запрашиваемого места
+		return data.some(function(item){
+			return item[property] === place;
+		});
+	}
+
+	var placeType;
+
+	if (testPlace(data[0], 'continent', place)) {
+		placeType = 'continent';
+	} else
+	if (testPlace(data[1], 'country', place)) {
+		placeType = 'country';
+	} else
+	if (testPlace(data[2], 'name', place)) {
+		placeType = 'city';
+	} else {
+		console.log('Неизвестное место');
+		return false;
+	}
+	// конец определения типа запрашиваемого места
+
+	// начало определения населения запрашиваемого места
+	var result = [place];
+
+	function filterPlace(data, property, target, place) { // функция для определения населения запрашиваемого места
+		return data
+		.filter(function(item){
+				return place.some(function(subitem){
+					return item[property] === subitem;
+				});
+			})
+		.map(function(item){
+				return item[target];
+			});
+	}
+
+	if (placeType === 'continent') {
+		result = filterPlace(data[0], 'continent', 'name', result);
+	}
+	if (placeType === 'continent' || placeType === 'country') {
+		result = filterPlace(data[1], 'country', 'name', result);
+	}
+	result = filterPlace(data[2], 'name', 'count', result);
+
+		result = result.reduce(function(a, b){
+			return a + b;
+		});
+
+		result = 'Население '+ place +' равно ' + result;
+
+	// конец определения населения запрашиваемого места
+
+	console.log(result);
+	return false;
+}
+
+var checker = setInterval(function() {
+	if (list[0] && list[1] && list[2]) { // проверка загрузки данных
+		load();
+		clearInterval(checker);
+		clearTimeout(checkerCancel);
+	}
+}, 50);
+
+function load() {
+	getPopulation('Africa', list);
+	getPopulation(window.prompt('Выберете место'), list);
+}
+
+var checkerCancel = setTimeout(function() {
+	console.log('Не удается загрузить данные');
+	clearInterval(checker);
+}, 5000);
+
+</script>
+
+</body>
+</html>
